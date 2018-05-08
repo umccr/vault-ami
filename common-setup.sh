@@ -25,7 +25,7 @@ sudo apt-get update
 echo "--------------------------------------------------------------------------------"
 echo "Install tools"
 while pgrep unattended; do sleep 10; done;
-sudo apt-get install -y jq wget
+sudo apt-get install -y jq wget unzip
 
 
 echo "--------------------------------------------------------------------------------"
