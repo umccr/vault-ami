@@ -9,7 +9,7 @@ notifications:
   email: false
   slack:
     rooms:
-      secure: AXezMg+pU/cWcvrtDvTQzC5C2hGS8hTseY5FakRbrEwyQjypQceqNH/QmsMVXjAkvw2h+51H/0CHjbasc1sSv5F13YL5HSaGLBeJu1hIwMrqqm6uocE12LLoLxLDohRUMM1QCgBGUblRfWYHzSQVuTefZY0gxhcJo5j9BRrxBwOUNxDA58PcXT+vYXsQaVoWPBxbH62f2V3x7Cut4t8OrcAfMsOooLPdtVRU2luR8H6Ayoy5nzAw8Blf9Lv8ZWbUdkdKyaa8hk52LVJFI8Q/bHASuZ6ld1XIc6BzdZZu++IPqxNsc+EgLlLXg20uw9z9KV2N38wvrZ2xf/oqx74wjQQYzPWY47WQYRe8E8MFbI52xeRgOgHqEKZOEQcSko9B4MQcj5gbg+OXGVUgWYhfpyPGgc8LpQB7Den59y1Wsjuol5QFHPJhRiyz+Uc7Sn53x8lRwpR6FyUu06b4qzTumO0DssPxyKRFsuGCI4Xh40yI6UDmDXxSS1V2O9XGf8mVv5smRV0h6P6OJ/t+WUzHNks3R+INnzlJlYfU4vHPNpLEASYEgYxAea1exqOAMR909VjfZWJpkCRHphAoteRbJTykJD6X2g1n5MGNNbK79hAl+ug0Uv4gkvS0pAoK1XGTdCvAjvvYq4Kdf8x5xCA59X40Lz3hYTbLQKAkDYd+Ulk=
+      secure: ZmbnJhM4qTzjiNAforDwMHg6jRe8DiiJzU+Db5vRMw1ymp+doz+nFruBEsZFUUlc+23YtfyklsjDVqRZsSMAtWjk/fkjeoJA3nMPMhJJ2IBwepaQhx0utmrAajqcb2qymFn9uKkn332Oibr54KWYn7qNf1Yijhv7PW091AMvA+/D6Y3cYkHSKTD5sFzGPYEm2TwNlV6vZtsDDY5zA/HGhw/x2tu7vsZcthvLMWz923xk7Dcgf0mVL28I081nfuN5JJUSWZBLQchhnFGjBNIJI7jutEMq3swNV8oWC2QyKgEI8tb529rcDKXd+tzAjoBENKvHEqjaf3XySe57P4JeAgOWz71HBrww0pmCthAnyr8MEukcEgKfo+hPkbP2lFn6xXqJ27AUgI8WdIGNHXsesfdfRReGm41qZ/oRe2JmVfz/D1Mt7ZyWgC9ksW4SGZknjBsVbQIObmyARXx9pHOLTyPZyY2x6Fch9Gz+9xCxFZWxR3ef27QTyyY4B8/YHDQmv1knH4R9H8jHfNM41ys21vmjLCBQpWIP0abn5Q+DrUyMbuUwejevmLkFcYo/Xyq1N1F2VKei3FRTEAV8laJBG8rfDXW+XydIzm0hskJCJs1Gq1lDAXOXbG7bLZUk3BWPiqtNaiyfeNyWJqa/u/DlfY+8T4NbfC+7nkfWD0cO8+c=
 before_install:
 - sudo apt-get update -y --fix-missing
 install:
@@ -24,4 +24,4 @@ install:
 script:
 - "./build.sh"
 after_success:
-  - "./send-datadog-event.sh vault"
+- "./send-datadog-event.sh vault"
