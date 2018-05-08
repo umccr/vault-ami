@@ -10,7 +10,15 @@
       "ami_name": "{{user `custom_ami_name`}} {{timestamp}}",
       "instance_type": "t2.medium",
       "region": "ap-southeast-2",
-      "source_ami": "ami-8610dee4",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "root-device-type": "ebs",
+          "name": "ubuntu/images/*/ubuntu-artful-17.10-amd64-server-*"
+        },
+        "owners": ["099720109477"],
+        "most_recent": true
+      },
       "ami_description": "{{user `custom_ami_name`}} AMI",
       "name": "{{user `custom_ami_name`}}",
       "type": "amazon-ebs",
