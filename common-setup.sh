@@ -19,13 +19,37 @@ echo "--------------------------------------------------------------------------
 echo "Update packages (APT)"
 # this delay is crucial for the apt to update properly, without it following install commands will result in package not found errors
 while pgrep unattended; do sleep 10; done;
-sudo apt-get update
+sudo apt-get update -yq --fix-missing
 # sudo apt-get -y upgrade
 
 echo "--------------------------------------------------------------------------------"
 echo "Install tools"
 while pgrep unattended; do sleep 10; done;
-sudo apt-get install -y jq wget unzip
+
+for attempt in 1 2 3; do
+  if [ ! -z "`which jq`" ]; then
+    break
+  fi
+  echo "Trying to install jq, attempt $attempt"
+  sudo apt-get update -yq --fix-missing
+  sudo apt-get install -yq jq
+done
+for attempt in 1 2 3; do
+  if [ ! -z "`which wget`" ]; then
+    break
+  fi
+  echo "Trying to install wget, attempt $attempt"
+  sudo apt-get update -yq --fix-missing
+  sudo apt-get install -yq wget
+done
+for attempt in 1 2 3; do
+  if [ ! -z "`which zip`" ]; then
+    break
+  fi
+  echo "Trying to install zip, attempt $attempt"
+  sudo apt-get update -yq --fix-missing
+  sudo apt-get install -yq zip
+done
 
 
 echo "--------------------------------------------------------------------------------"
