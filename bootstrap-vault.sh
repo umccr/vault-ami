@@ -12,6 +12,8 @@ sudo unzip *.zip
 sudo rm *.zip
 sudo ln -s $vault_dir/vault /usr/local/bin/vault
 
+# Setting up Vault and letsencrypt as services
+# See: https://www.monterail.com/blog/2017/lets-encrypt-vault-free-ssl-tls-certificate
 echo "Setting up systemd service to run vault server"
 sudo tee /etc/systemd/system/vault.service << 'END'
 [Unit]
