@@ -18,16 +18,20 @@ echo "Setting up systemd service to run vault server"
 sudo tee /etc/systemd/system/vault.service << 'END'
 [Unit]
 Description=Vault Server
-Documentation=https://www.vaultproject.io/docs/
+Documentation=https://www.vaultproject.io/docs
+Requires=network-online.target
 After=network-online.target
 
 [Service]
-Type=simple
-EnvironmentFile=-/opt/vault.env
-ExecStart=/usr/local/bin/vault server $OPTIONS -config $CONFIG
-ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
-KillMode=process
+User=vault
+Group=vault
+PermissionsStartOnly=true
+EnvironmentFile=-/opt/vault.env
+ExecStartPre=/sbin/setcap 'cap_ipc_lock=+ep' /usr/local/bin/vault
+ExecStart=/usr/local/bin/vault server -config /etc/vault/vault.hcl
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGINT
 
 [Install]
 WantedBy=multi-user.target
