@@ -36,6 +36,7 @@ KillSignal=SIGINT
 [Install]
 WantedBy=multi-user.target
 END
+sudo chmod 0644 /etc/systemd/system/vault.service
 
 
 echo "Installing Certbot (letsencrypt)"
