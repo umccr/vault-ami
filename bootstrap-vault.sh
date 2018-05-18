@@ -28,8 +28,8 @@ User=vault
 Group=vault
 PermissionsStartOnly=true
 EnvironmentFile=-/opt/vault.env
-ExecStartPre=/sbin/setcap 'cap_ipc_lock=+ep' /usr/local/bin/vault
-ExecStart=/usr/local/bin/vault server -config /etc/vault/vault.hcl
+ExecStartPre=/sbin/setcap 'cap_ipc_lock=+ep' /usr/local/vault/vault
+ExecStart=/usr/local/bin/vault server -config /opt/vault.hcl
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
 
