@@ -4,7 +4,7 @@ set -euxo pipefail # make sure any failling command will fail the whole script
 echo "################################################################################"
 echo "Installing Hashicorp Vault"
 vault_dir='/usr/local/vault'
-vault_version='0.10.1'
+vault_version='0.10.3'
 
 sudo mkdir "$vault_dir"
 cd "$vault_dir"
