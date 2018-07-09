@@ -57,6 +57,8 @@ ExecStart=/usr/local/bin/certbot-auto renew --agree-tos
 ExecStartPost=/bin/systemctl reload vault.service
 END
 
+# setup the timer to run the letsencrypt service on a daily basis
+# NOTE: the same names of the services!
 sudo tee /etc/systemd/system/letsencrypt.timer << 'END'
 [Unit]
 Description=Daily renewal of Let's Encrypt's certificates
@@ -103,3 +105,44 @@ KillSignal=SIGINT
 WantedBy=multi-user.target
 END
 sudo chmod 0644 /etc/systemd/system/goldfish.service
+
+
+echo "################################################################################"
+echo "Installing token provider script"
+
+sudo wget -O /usr/local/bin/token_provider https://raw.githubusercontent.com/umccr/infrastructure/master/scripts/token_provider
+sudo chmod 0644 /usr/local/bin/token_provider
+
+sudo tee /etc/systemd/system/token_provider.service << END
+[Unit]
+Description=Token Provider Service
+Documentation=Run a token provider to inject Vault access into Travis builds
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+EnvironmentFile=/opt/token_provider.env
+Restart=on-failure
+PermissionsStartOnly=true
+ExecStart=/usr/local/bin/token_provider
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
+END
+sudo chmod 0644 /etc/systemd/system/token_provider.service
+
+sudo tee /etc/systemd/system/token_provider.timer << END
+[Unit]
+Description=Daily renewal Vault token for Travis
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=10
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+END
+sudo chmod 0644 /etc/systemd/system/token_provider.timer
