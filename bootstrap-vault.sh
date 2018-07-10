@@ -116,7 +116,7 @@ sudo chmod 0744 /usr/local/bin/token_provider
 sudo tee /etc/systemd/system/token_provider.service << 'END'
 [Unit]
 Description=Token Provider Service
-Documentation=Run a token provider to inject Vault access into Travis builds
+Documentation=https://github.com/umccr/infrastructure/blob/master/scripts/token_provider
 Requires=network-online.target
 After=network-online.target
 StartLimitIntervalSec=0
