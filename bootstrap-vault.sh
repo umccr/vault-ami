@@ -111,7 +111,7 @@ echo "##########################################################################
 echo "Installing token provider script"
 
 sudo wget -O /usr/local/bin/token_provider https://raw.githubusercontent.com/umccr/infrastructure/master/scripts/token_provider
-sudo chmod 0644 /usr/local/bin/token_provider
+sudo chmod 0744 /usr/local/bin/token_provider
 
 sudo tee /etc/systemd/system/token_provider.service << 'END'
 [Unit]
@@ -119,10 +119,13 @@ Description=Token Provider Service
 Documentation=Run a token provider to inject Vault access into Travis builds
 Requires=network-online.target
 After=network-online.target
+StartLimitIntervalSec=4000
+StartLimitBurst=5
 
 [Service]
 EnvironmentFile=/opt/token_provider.env
 Restart=on-failure
+RestartSec=600
 PermissionsStartOnly=true
 ExecStart=/usr/local/bin/token_provider
 ExecReload=/bin/kill -HUP $MAINPID
