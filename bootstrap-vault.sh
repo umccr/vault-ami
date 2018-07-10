@@ -113,7 +113,7 @@ echo "Installing token provider script"
 sudo wget -O /usr/local/bin/token_provider https://raw.githubusercontent.com/umccr/infrastructure/master/scripts/token_provider
 sudo chmod 0644 /usr/local/bin/token_provider
 
-sudo tee /etc/systemd/system/token_provider.service << END
+sudo tee /etc/systemd/system/token_provider.service << 'END'
 [Unit]
 Description=Token Provider Service
 Documentation=Run a token provider to inject Vault access into Travis builds
@@ -133,7 +133,7 @@ WantedBy=multi-user.target
 END
 sudo chmod 0644 /etc/systemd/system/token_provider.service
 
-sudo tee /etc/systemd/system/token_provider.timer << END
+sudo tee /etc/systemd/system/token_provider.timer << 'END'
 [Unit]
 Description=Daily renewal Vault token for Travis
 
