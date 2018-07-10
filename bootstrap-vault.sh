@@ -119,8 +119,7 @@ Description=Token Provider Service
 Documentation=Run a token provider to inject Vault access into Travis builds
 Requires=network-online.target
 After=network-online.target
-StartLimitIntervalSec=4000
-StartLimitBurst=5
+StartLimitIntervalSec=0
 
 [Service]
 EnvironmentFile=/opt/token_provider.env
