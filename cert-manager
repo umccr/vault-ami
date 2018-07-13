@@ -1,0 +1,61 @@
+#!/bin/bash
+set -e
+set -o pipefail
+
+# Certificate manager
+# This script manages the SSL certificates generated and renewec by Let's Encrypt
+# Certificates are auto-renewed by certbot and stored in an S3 bucket to prevent
+# unnecessary generation of new certificates (which also helps with rate limits
+# imposed by Let's Encrypt)
+
+# This scripts expects the following env vars:
+# - VAULT_FQDN: the FQDN to get the certificate for
+# - S3_CERT_BACKUP_DIR: the S3 location to use as certificate backup
+# - NOTIFY_EMAIL: the email to use for correspondence with LetsEncrypt
+
+if test -z "$VAULT_FQDN"; then
+  echo "VAULT_FQDN not set!"
+  exit 1
+fi
+if test -z "$S3_CERT_BACKUP_DIR"; then
+  echo "S3_CERT_BACKUP_DIR not set!"
+  exit 1
+fi
+if test -z "$NOTIFY_EMAIL"; then
+  echo "NOTIFY_EMAIL not set!"
+  exit 1
+fi
+
+
+# in the normal case the certificate will already be in place
+if [ -f "/etc/letsencrypt/live/${VAULT_FQDN}/fullchain.pem" ]; then
+    echo "Detected existing certificate. Taking renewal route..."
+    cmd="/usr/local/bin/certbot-auto renew --agree-tos"
+    echo "$cmd"
+    eval "$cmd"
+else # in case of reboots or redeploys certificates may not exist on the machine yet
+    echo "No existing certificate detected. Trying to restore it from backup S3 bucket..."
+    cmd="aws s3 sync ${S3_CERT_BACKUP_DIR}/ /etc/letsencrypt/live/${VAULT_FQDN}/"
+    echo "$cmd"
+    eval "$cmd"
+    # if for some reason the restore did not work or the were no backups, we generate new ones
+    if [ ! -f "/etc/letsencrypt/live/${VAULT_FQDN}/fullchain.pem" ]; then
+        echo "Certs were not retrieved from backup. Requesting new ones..."
+        cmd="/usr/local/bin/certbot-auto certonly --standalone -n -d ${VAULT_FQDN} --agree-tos --email ${NOTIFY_EMAIL}"
+        echo "$cmd"
+        eval "$cmd"
+    fi
+fi
+
+# At this point we should have a valid certificate
+# We don't bother about checking if it's the same as the backup, we just
+# back it up again to make sure we have the latest version stored.
+
+echo "Backing up certs..."
+cmd="aws s3 sync /etc/letsencrypt/live/${VAULT_FQDN}/ ${S3_CERT_BACKUP_DIR}/"
+echo "$cmd"
+eval "$cmd"
+# TODO: perhaps check if the aws command succeeded!
+echo "All done."
+
+

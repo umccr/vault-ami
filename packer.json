@@ -61,6 +61,11 @@
       "destination": "/tmp/cleanup.sh"
     },
     {
+      "type": "file",
+      "source": "cert-manager",
+      "destination": "/tmp/cert-manager"
+    },
+    {
       "type": "shell",
       "execute_command": "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
       "inline": [

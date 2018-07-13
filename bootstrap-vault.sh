@@ -44,22 +44,25 @@ wget https://dl.eff.org/certbot-auto
 chmod a+x certbot-auto
 certbot-auto -n --version
 
-echo "Setting up systemd service to run letsencrypt"
-sudo tee /etc/systemd/system/letsencrypt.service << 'END'
+sudo mv /tmp/cert-manager /usr/local/bin/cert-manager
+sudo chmod +x /usr/local/bin/cert-manager
+echo "Setting up systemd service to run letsencrypt via cert-manager"
+sudo tee /etc/systemd/system/cert-manager.service << 'END'
 [Unit]
-Description=Let's Encrypt renewal service
+Description=Certificate manager service
 Documentation=https://certbot.eff.org/#ubuntuxenial-nginx
 After=network.target
 
 [Service]
+EnvironmentFile=/opt/cert-manager.env
 Type=oneshot
-ExecStart=/usr/local/bin/certbot-auto renew --agree-tos
+ExecStart=/usr/local/bin/cert-manager
 ExecStartPost=/bin/systemctl reload vault.service
 END
 
 # setup the timer to run the letsencrypt service on a daily basis
 # NOTE: the same names of the services!
-sudo tee /etc/systemd/system/letsencrypt.timer << 'END'
+sudo tee /etc/systemd/system/cert-manager.timer << 'END'
 [Unit]
 Description=Daily renewal of Let's Encrypt's certificates
 
