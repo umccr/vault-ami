@@ -63,8 +63,8 @@ for repo_slug in "${repo_slugs[@]}"; do
 
         # Can't overwrite existing vars, therefore we have to find the IDs for the vars we want to update
         env_vars_json=$(curl -sS -H "Travis-API-Version: 3" -H "Authorization: token $travis_token" https://api.travis-ci.org/repo/$repo_slug_enc/env_vars)
-        vault_addr_id=$(echo $env_vars_json | jq -r ".env_vars | .[] | select( .name == \"$vault_addr_key\")) | .id")
-        vault_token_id=$(echo $env_vars_json | jq -r ".env_vars | .[] | select( .name == \"$vault_token_key\")) | .id")
+        vault_addr_id=$(echo $env_vars_json | jq -r ".env_vars | .[] | select( .name == \"$vault_addr_key\") | .id")
+        vault_token_id=$(echo $env_vars_json | jq -r ".env_vars | .[] | select( .name == \"$vault_token_key\") | .id")
 
         # if the retrieved values are empty, this may be a new repo, which is not set up for Vault yet
         # requests to update a non-existing var will fail, we have to create new vars instead
