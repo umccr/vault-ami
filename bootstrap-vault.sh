@@ -1,6 +1,7 @@
 #!/bin/bash -x
 set -euxo pipefail # make sure any failling command will fail the whole script
 
+
 echo "################################################################################"
 echo "Installing Hashicorp Vault"
 vault_dir='/usr/local/vault'
@@ -16,6 +17,7 @@ sudo ln -s "$vault_dir/vault" /usr/local/bin/vault
 
 # Setting up Vault and letsencrypt as services
 # See: https://www.monterail.com/blog/2017/lets-encrypt-vault-free-ssl-tls-certificate
+echo "################################################################################"
 echo "Setting up systemd service to run vault server"
 sudo tee /etc/systemd/system/vault.service << 'END'
 [Unit]
@@ -38,31 +40,32 @@ END
 sudo chmod 0644 /etc/systemd/system/vault.service
 
 
-echo "Installing Certbot (letsencrypt)"
+echo "################################################################################"
+echo "Setting up letsencrypt and certificate manager"
 cd /usr/local/bin
 wget https://dl.eff.org/certbot-auto
 chmod a+x certbot-auto
 certbot-auto -n --version
 
-sudo mv /tmp/cert-manager /usr/local/bin/cert-manager
-sudo chmod +x /usr/local/bin/cert-manager
-echo "Setting up systemd service to run letsencrypt via cert-manager"
-sudo tee /etc/systemd/system/cert-manager.service << 'END'
+sudo mv /tmp/cert_manager /usr/local/bin/cert_manager
+sudo chmod +x /usr/local/bin/cert_manager
+echo "Setting up systemd service to run letsencrypt via cert_manager"
+sudo tee /etc/systemd/system/cert_manager.service << 'END'
 [Unit]
 Description=Certificate manager service
 Documentation=https://certbot.eff.org/#ubuntuxenial-nginx
 After=network.target
 
 [Service]
-EnvironmentFile=/opt/cert-manager.env
+EnvironmentFile=/opt/cert_manager.env
 Type=oneshot
-ExecStart=/usr/local/bin/cert-manager
+ExecStart=/usr/local/bin/cert_manager
 ExecStartPost=/bin/systemctl restart vault.service
 END
 
 # setup the timer to run the letsencrypt service on a daily basis
 # NOTE: the same names of the services!
-sudo tee /etc/systemd/system/cert-manager.timer << 'END'
+sudo tee /etc/systemd/system/cert_manager.timer << 'END'
 [Unit]
 Description=Daily renewal of Let's Encrypt's certificates
 
@@ -113,7 +116,7 @@ sudo chmod 0644 /etc/systemd/system/goldfish.service
 echo "################################################################################"
 echo "Installing token provider script"
 
-sudo wget -O /usr/local/bin/token_provider https://raw.githubusercontent.com/umccr/infrastructure/master/scripts/token_provider
+sudo mv /tmp/token_provider /usr/local/bin/token_provider
 sudo chmod 0744 /usr/local/bin/token_provider
 
 sudo tee /etc/systemd/system/token_provider.service << 'END'

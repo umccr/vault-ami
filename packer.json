@@ -62,8 +62,13 @@
     },
     {
       "type": "file",
-      "source": "cert-manager",
-      "destination": "/tmp/cert-manager"
+      "source": "cert_manager",
+      "destination": "/tmp/cert_manager"
+    },
+    {
+      "type": "file",
+      "source": "token_provider",
+      "destination": "/tmp/token_provider"
     },
     {
       "type": "shell",
