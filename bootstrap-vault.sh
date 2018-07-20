@@ -135,9 +135,6 @@ PermissionsStartOnly=true
 ExecStart=/usr/local/bin/token_provider
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
-
-[Install]
-WantedBy=multi-user.target
 END
 sudo chmod 0644 /etc/systemd/system/token_provider.service
 
