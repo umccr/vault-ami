@@ -70,9 +70,8 @@ sudo tee /etc/systemd/system/cert_manager.timer << 'END'
 Description=Daily renewal of Let's Encrypt's certificates
 
 [Timer]
-OnCalendar=daily
-RandomizedDelaySec=10
-Persistent=true
+OnActiveSec=10sec
+OnUnitActiveSec=1day
 
 [Install]
 WantedBy=timers.target
