@@ -57,6 +57,11 @@
     },
     {
       "type": "file",
+      "source": "bootstrap-cloudwatch-agent.sh",
+      "destination": "/tmp/bootstrap-cloudwatch-agent.sh"
+    },
+    {
+      "type": "file",
       "source": "cleanup.sh",
       "destination": "/tmp/cleanup.sh"
     },
@@ -80,6 +85,7 @@
         "ls -hal .",
         "./common-setup.sh",
         "./bootstrap-vault.sh",
+        "./bootstrap-cloudwatch-agent.sh",
         "./cleanup.sh"
       ]
     }
