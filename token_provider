@@ -70,22 +70,18 @@ for repo_slug in "${repo_slugs[@]}"; do
         # requests to update a non-existing var will fail, we have to create new vars instead
         if test -z "$vault_addr_id"; then
             echo "$vault_addr_key not set on repo marked as 'umccr-automation'! Creating new one."
-            cmd="curl -X POST -H \"Content-Type: application/json\" -H \"Travis-API-Version: 3\" -H \"Authorization: token $travis_token\" -d '{ \"env_var.name\": \"$vault_addr_key\", \"env_var.value\": \"$vault_addr_value\", \"env_var.public\": false }' https://api.travis-ci.org/repo/$repo_slug_enc/env_vars"
-            echo "$cmd"
+            cmd="curl -sS -X POST -H \"Content-Type: application/json\" -H \"Travis-API-Version: 3\" -H \"Authorization: token $travis_token\" -d '{ \"env_var.name\": \"$vault_addr_key\", \"env_var.value\": \"$vault_addr_value\", \"env_var.public\": false }' https://api.travis-ci.org/repo/$repo_slug_enc/env_vars"
             eval "$cmd"
         else
-            cmd="curl -X PATCH -H \"Content-Type: application/json\" -H \"Travis-API-Version: 3\" -H \"Authorization: token $travis_token\" -d '{ \"env_var.value\": \"$vault_addr_value\", \"env_var.public\": false }' https://api.travis-ci.org/repo/$repo_slug_enc/env_var/$vault_addr_id"
-            echo "$cmd"
+            cmd="curl -sS -X PATCH -H \"Content-Type: application/json\" -H \"Travis-API-Version: 3\" -H \"Authorization: token $travis_token\" -d '{ \"env_var.value\": \"$vault_addr_value\", \"env_var.public\": false }' https://api.travis-ci.org/repo/$repo_slug_enc/env_var/$vault_addr_id"
             eval "$cmd"
         fi
         if test -z "$vault_token_id"; then
             echo "VAULT_TOKEN not set on repo marked as 'umccr-automation'! Creating new one."
-            cmd="curl -X POST -H \"Content-Type: application/json\" -H \"Travis-API-Version: 3\" -H \"Authorization: token $travis_token\" -d '{ \"env_var.name\": \"$vault_token_key\", \"env_var.value\": \"$vault_token\", \"env_var.public\": false }' https://api.travis-ci.org/repo/$repo_slug_enc/env_vars"
-            echo "$cmd"
+            cmd="curl -sS -X POST -H \"Content-Type: application/json\" -H \"Travis-API-Version: 3\" -H \"Authorization: token $travis_token\" -d '{ \"env_var.name\": \"$vault_token_key\", \"env_var.value\": \"$vault_token\", \"env_var.public\": false }' https://api.travis-ci.org/repo/$repo_slug_enc/env_vars"
             eval "$cmd"
         else
-            cmd="curl -X PATCH -H \"Content-Type: application/json\" -H \"Travis-API-Version: 3\" -H \"Authorization: token $travis_token\" -d '{ \"env_var.value\": \"$vault_token\", \"env_var.public\": false }' https://api.travis-ci.org/repo/$repo_slug_enc/env_var/$vault_token_id"
-            echo "$cmd"
+            cmd="curl -sS -X PATCH -H \"Content-Type: application/json\" -H \"Travis-API-Version: 3\" -H \"Authorization: token $travis_token\" -d '{ \"env_var.value\": \"$vault_token\", \"env_var.public\": false }' https://api.travis-ci.org/repo/$repo_slug_enc/env_var/$vault_token_id"
             eval "$cmd"
         fi
     else 
