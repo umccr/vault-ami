@@ -60,7 +60,7 @@ After=network.target
 EnvironmentFile=/opt/cert_manager.env
 Type=oneshot
 ExecStart=/usr/local/bin/cert_manager
-ExecStartPost=/bin/systemctl restart vault.service
+ExecStartPost=/bin/systemctl reload vault.service
 END
 
 # setup the timer to run the letsencrypt service on a daily basis
