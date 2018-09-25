@@ -35,7 +35,7 @@ if [ -f "/etc/letsencrypt/live/${VAULT_FQDN}/fullchain.pem" ]; then
     eval "$cmd"
 else # in case of reboots or redeploys certificates may not exist on the machine yet
     echo "No existing certificate detected. Trying to restore it from backup S3 bucket..."
-    cmd="aws s3 sync ${S3_CERT_BACKUP_DIR}/ /etc/letsencrypt/live/${VAULT_FQDN}/"
+    cmd="aws s3 sync ${S3_CERT_BACKUP_DIR}/ /etc/letsencrypt/"
     echo "$cmd"
     eval "$cmd"
     # if for some reason the restore did not work or the were no backups, we generate new ones
@@ -52,7 +52,7 @@ fi
 # back it up again to make sure we have the latest version stored.
 
 echo "Backing up certs..."
-cmd="aws s3 sync /etc/letsencrypt/live/${VAULT_FQDN}/ ${S3_CERT_BACKUP_DIR}/"
+cmd="aws s3 sync /etc/letsencrypt/ ${S3_CERT_BACKUP_DIR}/"
 echo "$cmd"
 eval "$cmd"
 # TODO: perhaps check if the aws command succeeded!
