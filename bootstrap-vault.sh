@@ -28,6 +28,7 @@ After=network-online.target
 
 [Service]
 Restart=on-failure
+RestartSec=10
 PermissionsStartOnly=true
 ExecStartPre=/sbin/setcap 'cap_ipc_lock=+ep' /usr/local/vault/vault
 ExecStart=/usr/local/bin/vault server -config /opt/vault.hcl
