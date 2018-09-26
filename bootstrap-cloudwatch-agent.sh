@@ -11,8 +11,9 @@ state_file = /var/awslogs/state/agent-state
 [/var/log/syslog]
 file = /var/log/syslog
 log_group_name = /var/log/syslog
-log_stream_name = {instance_id}
-datetime_format = %b %d %H:%M:%S
+log_stream_name = vault_{instance_id}
+datetime_format = %Y-%m-%dT%H:%M:%S%z
+time_zone = LOCAL
 initial_position = start_of_file
 buffer_duration = 10000
 END
