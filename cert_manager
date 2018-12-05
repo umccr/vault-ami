@@ -38,6 +38,19 @@ else # in case of reboots or redeploys certificates may not exist on the machine
     cmd="aws s3 sync ${S3_CERT_BACKUP_DIR}/ /etc/letsencrypt/"
     echo "$cmd"
     eval "$cmd"
+    # NOTE: S3 does not support symlinks, it just creates copies.
+    # Currently all files in 'live' are expected to be symlinks to the real files in 'archive'
+    # So we try to recreate that scenario
+    # 1. remove everything in 'archive', as we'll replace it with the copied files in 'live'
+    rm -f /etc/letsencrypt/archive/${VAULT_FQDN}/*.pem
+    # 2. Move the files from 'live' to 'archive' and put symlinks in their place
+    echo "Moving files into place"
+    for file in /etc/letsencrypt/live/${VAULT_FQDN}/*.pem; do
+      filename=$(basename $file)
+      mv $file /etc/letsencrypt/archive/${VAULT_FQDN}/${filename/.pem/1.pem}
+      cd $(dirname $file) && ln -s ../../archive/${VAULT_FQDN}/${filename/.pem/1.pem} $filename
+    done
+    echo "Files moved"
     # if for some reason the restore did not work or the were no backups, we generate new ones
     if [ ! -f "/etc/letsencrypt/live/${VAULT_FQDN}/fullchain.pem" ]; then
         echo "Certs were not retrieved from backup. Requesting new ones..."
@@ -57,5 +70,3 @@ echo "$cmd"
 eval "$cmd"
 # TODO: perhaps check if the aws command succeeded!
 echo "All done."
-
-
